@@ -170,7 +170,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="halloy"><a class="header" href="#halloy">Halloy</a></h1>
-<img src="images/banner-logo.png" style="width: 100%">
+<img src="images/banner.png" style="width: 100%">
 <p><img src="./images/animation.gif" alt="halloy" /></p>
 <p><strong>Halloy</strong> is an open-source IRC client written in Rust, with the <a href="https://github.com/iced-rs/iced/">iced</a> GUI library. It aims to provide a simple and fast client for Mac, Windows, and Linux platforms.</p>
 <ul>
@@ -342,7 +342,9 @@ For feature requests or reporting issues, please open a ticket on <a href="https
 <p>Did we forget you? We're sorry about that! Feel free to add yourself and create a pull request.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="connect-with-soju"><a class="header" href="#connect-with-soju">Connect with Soju</a></h1>
 <p>To connect with a <a href="https://soju.im/"><strong>soju</strong></a> bouncer, the configuration below can be used as a template. Simply change so it fits your credentials.</p>
-<p><em>as of 2025.1 Halloy supports chathistory, so the machinename(like @desktop) is no longer needed</em></p>
+<blockquote>
+<p>💡  as of 2025.1 Halloy supports <a href="guides/../configuration/buffer.html#bufferchathistory"><code>chathistory</code></a>, so the machine name (like <code>@desktop</code>) is no longer needed when <code>chathistory</code> is enabled</p>
+</blockquote>
 <pre><code class="language-toml">[servers.libera]
 nickname = "casperstorm"
 username = "&lt;your-username&gt;/irc.libera.chat"
@@ -1467,7 +1469,7 @@ move_right = "alt+l"
 <tr><td><code>file_transfers</code></td><td>Toggle File Transfers Buffer</td><td><kbd>⌘</kbd> + <kbd>j</kbd></td><td><kbd>ctrl</kbd> + <kbd>j</kbd></td></tr>
 <tr><td><code>logs</code></td><td>Toggle Logs Buffer</td><td><kbd>⌘</kbd> + <kbd>l</kbd></td><td><kbd>ctrl</kbd> + <kbd>l</kbd></td></tr>
 <tr><td><code>theme_editor</code></td><td>Toggle Theme Editor Window</td><td><kbd>⌘</kbd> + <kbd>t</kbd></td><td><kbd>ctrl</kbd> + <kbd>t</kbd></td></tr>
-<tr><td><code>highlight</code></td><td>Toggle Highlight Window</td><td><kbd>⌘</kbd> + <kbd>i</kbd></td><td><kbd>ctrl</kbd> + <kbd>i</kbd></td></tr>
+<tr><td><code>highlights</code></td><td>Toggle Highlights Window</td><td><kbd>⌘</kbd> + <kbd>i</kbd></td><td><kbd>ctrl</kbd> + <kbd>i</kbd></td></tr>
 <tr><td><code>quit_application</code></td><td>Quit Halloy</td><td>Not set</td><td>Not set</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="notifications"><a class="header" href="#notifications"><code>[notifications]</code></a></h1>
