@@ -461,7 +461,7 @@ server = "irc.libera.chat"
 channels = ["#halloy"]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="single-pane"><a class="header" href="#single-pane">Single pane</a></h1>
-<p>The settings below will configure Halloy to have a single pane (or fixed number of panes) in regular use.  When needed, new panes can be opened via the context menu on sidebar items (e.g. right-click on a channel in the sidebar and select "Open in new pane").</p>
+<p>The settings below will configure Halloy to have a single pane (or fixed number of panes) in regular use.  After applying these settings, close all but one pane.  Then, when activating another channel or query in the sidebar, that buffer will replace the view in the sole remaining pane (rather than opening a new pane).  When needed, new panes can be opened via the context menu on sidebar items (e.g. right-click on a channel in the sidebar and select "Open in new pane").</p>
 <pre><code class="language-toml">[actions.buffer]
 click_channel_name = "replace-pane"
 click_highlight = "replace-pane"
@@ -472,6 +472,53 @@ message_user = "replace-pane"
 
 [actions.sidebar]
 buffer = "replace-pane"
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="reduce-noise"><a class="header" href="#reduce-noise">Reduce noise</a></h1>
+<p>It's not uncommon for channels to have many server messages for every regular message, resulting in a low signal to noise ratio.  Halloy has various settings that can help reduce the number of visible server messages in the chat log.  This guide will cover some of those settings.</p>
+<h2 id="disable-topic-messages"><a class="header" href="#disable-topic-messages">Disable topic messages</a></h2>
+<p>Most servers and bouncers will send a message with the topic every time Halloy joins a channel.  Since topics rarely change, it's often useful to hide these messages altogether with disabling the topic <a href="guides//configuration/buffer.html#bufferserver_messages">server message setting</a>:</p>
+<pre><code class="language-toml">[buffer.server_messages.topic]
+enabled = false
+</code></pre>
+<p>Note, this will not hide the messages sent when a topic changes, only the topic messages sent on first connection to a channel.</p>
+<p>If topic messages are hidden but a reminder of the current topic is still desired, then a topic banner can be enabled to appear at the top of each pane.  Either with the label icon button in the pane's title bar, or with the <a href="guides//configuration/buffer.html#bufferchanneltopic">topic banner settings</a>:</p>
+<pre><code class="language-toml">[buffer.channel.topic_banner]
+enabled = true
+max_lines = 2
+</code></pre>
+<h2 id="smart-filters"><a class="header" href="#smart-filters">Smart filters</a></h2>
+<p><a href="guides//configuration/buffer.html#smart-2">Smart filters</a> can be used for server messages to hide messages for users that have not sent a message recently.  For example, to hide part messages for any user that has not sent a message within the 15 minutes prior to their parting:</p>
+<pre><code class="language-toml">[buffer.server_messages.part]
+smart = 900
+</code></pre>
+<p>For many channels join, part, quit, and nickname changes make up a lot of noise and usually aren't relevant if the user hasn't been active.  To smart filter those messages these settings can be used:</p>
+<pre><code class="language-toml">[buffer.server_messages]
+join.smart = 900
+part.smart = 900
+quit.smart = 900
+change_nick.smart = 900
+</code></pre>
+<p>Smart filters can also be applied to <a href="guides//configuration/buffer.html#bufferinternal_messages">internal messages</a> as well.  For example, to hide any connect or disconnect message older than five minutes, use these settings:</p>
+<pre><code class="language-toml">[buffer.internal_messages]
+success.smart = 300
+error.smart = 300
+</code></pre>
+<h2 id="condense-server-messages"><a class="header" href="#condense-server-messages">Condense server messages</a></h2>
+<p>It may be preferable to not hide any server messages, in which case an alternative to filtering is to <a href="guides//configuration/buffer.html#bufferserver_messagescondense">condense server messages</a>.  This setting will combine multiple server messages into a one server message with a shortened style.  To enable condensed messages these settings can be used:</p>
+<pre><code class="language-toml">[buffer.server_messages.condense]
+messages = ["join", "part", "quit"]
+dimmed = true
+</code></pre>
+<p>When using condensed messages, it is recommended that you specify colors for the condensed messages in your <a href="guides//configuration/themes/index.html">theme</a>.  Those colors will be used for the abbreviations used in the condensed messages.  For example, these theme settings could be added:</p>
+<pre><code class="language-toml">[buffer.server_messages]
+join = "#efff95"
+part = "#ff6b77"
+quit = "#ff6b77"
+</code></pre>
+<h2 id="ignore"><a class="header" href="#ignore">Ignore</a></h2>
+<p>If dealing with a noisy user or bot, an <a href="guides//configuration/servers.html#filtersignore">ignore filter</a> can be used to hide their messages.  For example, to hide messages produced by <code>ChanServ</code> in the <code>#halloy</code> channel, the following setting can be used:</p>
+<pre><code class="language-toml">[servers.libera.filters]
+ignore = ["#halloy ChanServ"]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="text-formatting"><a class="header" href="#text-formatting">Text Formatting</a></h1>
 <p>Text can be formatted in Halloy by using the <code>/format</code> (or <code>/f</code>) command.</p>
@@ -1329,6 +1376,47 @@ include = ["#halloy"]
 [buffer.server_messages.&lt;server_message&gt;]
 username_format = "full"
 </code></pre>
+<h3 id="bufferserver_messagescondense"><a class="header" href="#bufferserver_messagescondense"><code>[buffer.server_messages.condense]</code></a></h3>
+<p>Condense multiple consecutive server messages into a single abbreviated message.</p>
+<h4 id="messages"><a class="header" href="#messages"><code>messages</code></a></h4>
+<p>Message type(s) to condense.  Supported types:</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>Event Type</strong></th><th><strong>Symbol</strong></th></tr></thead><tbody>
+<tr><td><code>join</code></td><td><code>+</code></td></tr>
+<tr><td><code>part</code></td><td><code>-</code></td></tr>
+<tr><td><code>quit</code></td><td><code>-</code></td></tr>
+</tbody></table>
+</div>
+<p>The color and font style of the symbols is taken from the theme setting for that event type.</p>
+<pre><code class="language-toml"># Type: array of strings
+# Values: ["join", "part", "quit"]
+# Default: []
+
+[buffer.server_messages.condense]
+messages = ["join", "part", "quit"]
+</code></pre>
+<h4 id="dimmed"><a class="header" href="#dimmed"><code>dimmed</code></a></h4>
+<p>Dim condensed messages.  Either automatically, based on text/background colors (by setting to <code>true</code>), or specify a dimming value in the range <code>0.0</code> (transparent) to <code>1.0</code> (no dimming).</p>
+<pre><code class="language-toml"># Type: bool or float
+# Values: true, false, or float
+# Default: false
+
+[buffer.server_messages.condense]
+dimmed = true
+</code></pre>
+<h4 id="format-1"><a class="header" href="#format-1"><code>format</code></a></h4>
+<p>How to format condensed messages:</p>
+<ul>
+<li><code>"brief"</code>:  Only show changes to channel state.  If a user joins then leaves, then do not show any message.  If a user joins, leaves, then joins again, then show that they joined the channel (<code>+</code>).</li>
+<li><code>"detailed"</code>: Include messages that do not change channel state, but do not show repeated events.  If a user joins then leaves, show a condensed message with both events (<code>+-</code>).  But, if a user joins and leaves many times in a row, show only indicate that they left and re-joined (i.e. still (<code>+-</code>).</li>
+<li><code>"full</code>":  Include all messages in the condensed message.  If a user joins and leaves three times, then show a symbol for each event (<code>+-+-+-</code>).</li>
+</ul>
+<pre><code class="language-toml"># Type: string
+# Values: "brief", "detailed", "full"
+# Default: "brief"
+
+[buffer.server_messages.condense]
+format = "full"
+</code></pre>
 <h2 id="bufferstatus_message_prefix"><a class="header" href="#bufferstatus_message_prefix"><code>[buffer.status_message_prefix]</code></a></h2>
 <p>Status message prefix settings.</p>
 <h3 id="brackets-1"><a class="header" href="#brackets-1"><code>brackets</code></a></h3>
@@ -1402,7 +1490,7 @@ completion_suffixes = [": ", " "]
 </code></pre>
 <h2 id="buffertimestamp"><a class="header" href="#buffertimestamp"><code>[buffer.timestamp]</code></a></h2>
 <p>Customize how timestamps are displayed within a buffer.</p>
-<h3 id="format-1"><a class="header" href="#format-1"><code>format</code></a></h3>
+<h3 id="format-2"><a class="header" href="#format-2"><code>format</code></a></h3>
 <p>Controls the timestamp format. The expected format is <a href="https://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html">strftime</a>.</p>
 <pre><code class="language-toml"># Type: string
 # Values: any valid strftime string
@@ -2706,7 +2794,7 @@ icon = "dot"
 <p>Changes the icon which appears when unread highlight messages are present. To disable use <code>"none"</code>.</p>
 <pre><code class="language-toml"># Type: string
 # Values: "dot", "circle-empty", "dot-circled", "certificate", "asterisk", "speaker", "lightbulb", "star", "none"
-# Default: "dot"
+# Default: "circle-empty"
 
 [sidebar.unread_indicator]
 highlight_icon = "circle-empty"
@@ -2872,7 +2960,7 @@ tooltips = true
 <h2 id="irc-and-ircs"><a class="header" href="#irc-and-ircs">IRC and IRCS</a></h2>
 <p>The IRC URL scheme is used to create a new connection to a server.<br />
 The format is based on the <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax">URI Syntax</a>.</p>
-<h2 id="format-2"><a class="header" href="#format-2">Format</a></h2>
+<h2 id="format-3"><a class="header" href="#format-3">Format</a></h2>
 <pre><code class="language-url">&lt;scheme&gt;://&lt;server&gt;:&lt;port&gt;/[#channel[,#channel]]
 </code></pre>
 <div class="table-wrapper"><table><thead><tr><th>Key</th><th>Description</th></tr></thead><tbody>
@@ -2915,7 +3003,8 @@ The argument(s) for a command are shown in <a href="configuration/tooltips.html"
 <tr><td><code>clear</code></td><td></td><td>Clear the message history in the current buffer</td></tr>
 <tr><td><code>cleartopic</code></td><td><code>ct</code></td><td>Clear the topic of a channel<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">2</a></sup></td></tr>
 <tr><td><code>ctcp</code></td><td></td><td>Client-To-Client requests<sup class="footnote-reference" id="fr-2-1"><a href="#footnote-2">3</a></sup></td></tr>
-<tr><td><code>delay</code></td><td></td><td>Delay the specified number of seconds<sup class="footnote-reference" id="fr-6-1"><a href="#footnote-6">4</a></sup></td></tr>
+<tr><td><code>delay</code></td><td></td><td>Delay the specified number of seconds<sup class="footnote-reference" id="fr-7-1"><a href="#footnote-7">4</a></sup></td></tr>
+<tr><td><code>detach</code></td><td></td><td>Hide the channel, but leave the bouncer's connection to the channel active[^5]<sup class="footnote-reference" id="fr-6-1"><a href="#footnote-6">5</a></sup></td></tr>
 <tr><td><code>format</code></td><td><code>f</code></td><td>Format text with markdown and colors</td></tr>
 <tr><td><code>hop</code></td><td><code>rejoin</code></td><td>Part the current channel and join a new one</td></tr>
 <tr><td><code>join</code></td><td><code>j</code></td><td>Join channel(s) with optional key(s)</td></tr>
@@ -2923,13 +3012,13 @@ The argument(s) for a command are shown in <a href="configuration/tooltips.html"
 <tr><td><code>knock</code></td><td></td><td>Request an invite from an invitation-only channel<sup class="footnote-reference" id="fr-5-2"><a href="#footnote-5">1</a></sup></td></tr>
 <tr><td><code>list</code></td><td></td><td>List channel(s) on the server<sup class="footnote-reference" id="fr-5-3"><a href="#footnote-5">1</a></sup></td></tr>
 <tr><td><code>me</code></td><td><code>describe</code></td><td>Send an action message to the channel</td></tr>
-<tr><td><code>mode</code></td><td><code>m</code></td><td>Set mode(s) on a channel or retrieve the current mode(s) set<sup class="footnote-reference" id="fr-3-1"><a href="#footnote-3">5</a></sup></td></tr>
+<tr><td><code>mode</code></td><td><code>m</code></td><td>Set mode(s) on a channel or retrieve the current mode(s) set<sup class="footnote-reference" id="fr-3-1"><a href="#footnote-3">6</a></sup></td></tr>
 <tr><td><code>monitor</code></td><td></td><td>System to notify when users become online/offline<sup class="footnote-reference" id="fr-5-4"><a href="#footnote-5">1</a></sup></td></tr>
 <tr><td><code>motd</code></td><td></td><td>Request the message of the day</td></tr>
 <tr><td><code>msg</code></td><td><code>query</code></td><td>Open a query with a nickname and send an optional message</td></tr>
 <tr><td><code>nick</code></td><td></td><td>Change your nickname on the current server</td></tr>
 <tr><td><code>notice</code></td><td></td><td>Send a notice message to a target</td></tr>
-<tr><td><code>part</code></td><td><code>leave</code></td><td>Leave and close channel(s)/quer(ies) with an optional reason <sup class="footnote-reference" id="fr-4-1"><a href="#footnote-4">6</a></sup></td></tr>
+<tr><td><code>part</code></td><td><code>leave</code></td><td>Leave and close channel(s)/quer(ies) with an optional reason <sup class="footnote-reference" id="fr-4-1"><a href="#footnote-4">7</a></sup></td></tr>
 <tr><td><code>quit</code></td><td></td><td>Disconnect from the server with an optional reason</td></tr>
 <tr><td><code>raw</code></td><td></td><td>Send data to the server without modifying it</td></tr>
 <tr><td><code>setname</code></td><td></td><td>Change your realname<sup class="footnote-reference" id="fr-5-5"><a href="#footnote-5">1</a></sup></td></tr>
@@ -2939,7 +3028,7 @@ The argument(s) for a command are shown in <a href="configuration/tooltips.html"
 </tbody></table>
 </div><hr>
 <ol class="footnote-definition"><li id="footnote-5">
-<p>Command must be supported by the server to be executed successfully; if not supported then the command will not appear in the command picker. <a href="#fr-5-1">↩</a> <a href="#fr-5-2">↩2</a> <a href="#fr-5-3">↩3</a> <a href="#fr-5-4">↩4</a> <a href="#fr-5-5">↩5</a></p>
+<p>Command must be supported by the bouncer/server to be executed successfully; if not supported then the command will not appear in the command picker. <a href="#fr-5-1">↩</a> <a href="#fr-5-2">↩2</a> <a href="#fr-5-3">↩3</a> <a href="#fr-5-4">↩4</a> <a href="#fr-5-5">↩5</a></p>
 </li>
 <li id="footnote-1">
 <p>The <code>channel</code> argument can be skipped when used in a channel buffer to target the channel in the buffer. <a href="#fr-1-1">↩</a> <a href="#fr-1-2">↩2</a> <a href="#fr-1-3">↩3</a></p>
@@ -2947,8 +3036,11 @@ The argument(s) for a command are shown in <a href="configuration/tooltips.html"
 <li id="footnote-2">
 <p>The <code>nick</code> argument can be skipped when used in a query buffer to target the other user in the buffer. <a href="#fr-2-1">↩</a></p>
 </li>
+<li id="footnote-7">
+<p>Can only be used in <a href="configuration/servers.html#on_connect"><code>on_connect</code></a>. <a href="#fr-7-1">↩</a></p>
+</li>
 <li id="footnote-6">
-<p>Can only be used in <a href="configuration/servers.html#on_connect"><code>on_connect</code></a>. <a href="#fr-6-1">↩</a></p>
+<p>See <a href="https://soju.im/">soju</a>'s <a href="https://man.sr.ht/chat.sr.ht/bouncer-usage.md#detaching-from-channels">documentation on detaching from channels</a> for more information. <a href="#fr-6-1">↩</a></p>
 </li>
 <li id="footnote-3">
 <p>The <code>target</code> argument can be skipped; in a channel buffer it will target the channel in the buffer, in a query buffer it will target the other user in the buffer, and in a server buffer it will target your user. <a href="#fr-3-1">↩</a></p>
