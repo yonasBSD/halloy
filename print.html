@@ -1457,7 +1457,7 @@ auto_format = "markdown"
 <p>Ordering that autocomplete uses to select from matching users.</p>
 <ul>
 <li><code>"recent"</code>: Autocomplete users by their last message in the channel;  the user with most recent message autocompletes first, then increasingly older messages.  Users with no seen messages are matched last, in the order specified by <code>sort_direction</code>.</li>
-<li><code>"alpha"</code>: Autocomplete users based on alphabetical ordering of potential matches.  Ordering is asecnding/descinding based on <code>sort_direction</code>.</li>
+<li><code>"alpha"</code>: Autocomplete users based on alphabetical ordering of potential matches.  Ordering is ascending/descending based on <code>sort_direction</code>.</li>
 </ul>
 <pre><code class="language-toml"># Type: string
 # Values: "alpha", "recent"
@@ -1572,6 +1572,18 @@ time = true
 
 [ctcp]
 version = true
+</code></pre>
+<h1 id="userinfo"><a class="header" href="#userinfo"><code>userinfo</code></a></h1>
+<p>Whether Halloy will respond to a <a href="https://modern.ircdocs.horse/ctcp#userinfo">CTCP USERINFO</a> message. The response is enabled if this option is set to a string, which will be used as the reply.</p>
+<pre><code class="language-toml"># Type: string
+# Values: any string
+# Default: not set
+
+# Example usage: &lt;nickname&gt; (&lt;realname&gt;)
+# KVIrc usage:   Age=&lt;age&gt;; Gender=&lt;gender&gt;; Location=&lt;location&gt;; Languages=&lt;languages&gt;; &lt;other&gt;
+
+[ctcp]
+userinfo = "&lt;nickname&gt; (&lt;realname&gt;)"
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="file_transfer"><a class="header" href="#file_transfer"><code>[file_transfer]</code></a></h1>
 <p>File transfer configuration options.</p>
@@ -2038,7 +2050,7 @@ width = 5
 scroller_width = 5
 </code></pre>
 <h2 id="split_axis"><a class="header" href="#split_axis"><code>split_axis</code></a></h2>
-<p>Default axis used when splitting the focused pane to create a new pane (i.e. default orientation of the divider between panes).  <code>"shorter"</code> will compare the width and height of the pane to select the splitting axis;  if the width is shorter then the horizontal axis is selected, and if the height is hosrter then the vertical axis is selected.  <code>"largest-shorter"</code> will split the largest pane in the main window using the same method as <code>"shorter"</code>, rather than splitting the focused pane.</p>
+<p>Default axis used when splitting the focused pane to create a new pane (i.e. default orientation of the divider between panes).  <code>"shorter"</code> will compare the width and height of the pane to select the splitting axis;  if the width is shorter then the horizontal axis is selected, and if the height is shorter then the vertical axis is selected.  <code>"largest-shorter"</code> will split the largest pane in the main window using the same method as <code>"shorter"</code>, rather than splitting the focused pane.</p>
 <pre><code class="language-toml"># Type: string
 # Values: "horizontal", "largest-shorter", "shorter", "vertical"
 # Default: "shorter"
