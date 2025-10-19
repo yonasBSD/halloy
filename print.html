@@ -476,18 +476,18 @@ buffer = "replace-pane"
 <div style="break-before: page; page-break-before: always;"></div><h1 id="reduce-noise"><a class="header" href="#reduce-noise">Reduce noise</a></h1>
 <p>It's not uncommon for channels to have many server messages for every regular message, resulting in a low signal to noise ratio.  Halloy has various settings that can help reduce the number of visible server messages in the chat log.  This guide will cover some of those settings.</p>
 <h2 id="disable-topic-messages"><a class="header" href="#disable-topic-messages">Disable topic messages</a></h2>
-<p>Most servers and bouncers will send a message with the topic every time Halloy joins a channel.  Since topics rarely change, it's often useful to hide these messages altogether with disabling the topic <a href="guides//configuration/buffer.html#bufferserver_messages">server message setting</a>:</p>
+<p>Most servers and bouncers will send a message with the topic every time Halloy joins a channel.  Since topics rarely change, it's often useful to hide these messages altogether with disabling the topic <a href="guides/../configuration/buffer.html#bufferserver_messages">server message setting</a>:</p>
 <pre><code class="language-toml">[buffer.server_messages.topic]
 enabled = false
 </code></pre>
 <p>Note, this will not hide the messages sent when a topic changes, only the topic messages sent on first connection to a channel.</p>
-<p>If topic messages are hidden but a reminder of the current topic is still desired, then a topic banner can be enabled to appear at the top of each pane.  Either with the label icon button in the pane's title bar, or with the <a href="guides//configuration/buffer.html#bufferchanneltopic">topic banner settings</a>:</p>
+<p>If topic messages are hidden but a reminder of the current topic is still desired, then a topic banner can be enabled to appear at the top of each pane.  Either with the label icon button in the pane's title bar, or with the <a href="guides/../configuration/buffer.html#bufferchanneltopic_banner">topic banner settings</a>:</p>
 <pre><code class="language-toml">[buffer.channel.topic_banner]
 enabled = true
 max_lines = 2
 </code></pre>
 <h2 id="smart-filters"><a class="header" href="#smart-filters">Smart filters</a></h2>
-<p><a href="guides//configuration/buffer.html#smart-2">Smart filters</a> can be used for server messages to hide messages for users that have not sent a message recently.  For example, to hide part messages for any user that has not sent a message within the 15 minutes prior to their parting:</p>
+<p><a href="guides/../configuration/buffer.html#smart-2">Smart filters</a> can be used for server messages to hide messages for users that have not sent a message recently.  For example, to hide part messages for any user that has not sent a message within the 15 minutes prior to their parting:</p>
 <pre><code class="language-toml">[buffer.server_messages.part]
 smart = 900
 </code></pre>
@@ -498,25 +498,25 @@ part.smart = 900
 quit.smart = 900
 change_nick.smart = 900
 </code></pre>
-<p>Smart filters can also be applied to <a href="guides//configuration/buffer.html#bufferinternal_messages">internal messages</a> as well.  For example, to hide any connect or disconnect message older than five minutes, use these settings:</p>
+<p>Smart filters can also be applied to <a href="guides/../configuration/buffer.html#bufferinternal_messages">internal messages</a> as well.  For example, to hide any connect or disconnect message older than five minutes, use these settings:</p>
 <pre><code class="language-toml">[buffer.internal_messages]
 success.smart = 300
 error.smart = 300
 </code></pre>
 <h2 id="condense-server-messages"><a class="header" href="#condense-server-messages">Condense server messages</a></h2>
-<p>It may be preferable to not hide any server messages, in which case an alternative to filtering is to <a href="guides//configuration/buffer.html#bufferserver_messagescondense">condense server messages</a>.  This setting will combine multiple server messages into a one server message with a shortened style.  To enable condensed messages these settings can be used:</p>
+<p>It may be preferable to not hide any server messages, in which case an alternative to filtering is to <a href="guides/../configuration/buffer.html#bufferserver_messagescondense">condense server messages</a>.  This setting will combine multiple server messages into a one server message with a shortened style.  To enable condensed messages these settings can be used:</p>
 <pre><code class="language-toml">[buffer.server_messages.condense]
 messages = ["join", "part", "quit"]
 dimmed = true
 </code></pre>
-<p>When using condensed messages, it is recommended that you specify colors for the condensed messages in your <a href="guides//configuration/themes/index.html">theme</a>.  Those colors will be used for the abbreviations used in the condensed messages.  For example, these theme settings could be added:</p>
+<p>When using condensed messages, it is recommended that you specify colors for the condensed messages in your <a href="guides/../configuration/themes/README.html">theme</a>.  Those colors will be used for the abbreviations used in the condensed messages.  For example, these theme settings could be added:</p>
 <pre><code class="language-toml">[buffer.server_messages]
 join = "#efff95"
 part = "#ff6b77"
 quit = "#ff6b77"
 </code></pre>
 <h2 id="ignore"><a class="header" href="#ignore">Ignore</a></h2>
-<p>If dealing with a noisy user or bot, an <a href="guides//configuration/servers.html#filtersignore">ignore filter</a> can be used to hide their messages.  For example, to hide messages produced by <code>ChanServ</code> in the <code>#halloy</code> channel, the following setting can be used:</p>
+<p>If dealing with a noisy user or bot, an <a href="guides/../configuration/servers.html#filtersignore">ignore filter</a> can be used to hide their messages.  For example, to hide messages produced by <code>ChanServ</code> in the <code>#halloy</code> channel, the following setting can be used:</p>
 <pre><code class="language-toml">[servers.libera.filters]
 ignore = ["#halloy ChanServ"]
 </code></pre>
@@ -2598,6 +2598,15 @@ root_cert_path = ""
 [servers.&lt;name&gt;]
 on_connect = ["/msg NickServ IDENTIFY foo bar", "/delay 2", "/join registered-club"]
 </code></pre>
+<h2 id="anti_flood"><a class="header" href="#anti_flood"><code>anti_flood</code></a></h2>
+<p>The time (in milliseconds) between sending messages to servers without SAFERATE.  Timing is not strictly guaranteed;  small groups of messages may be allowed to be sent at a faster rate, messages may be delayed in order to be batched, automated messages are included in the queue (most at a lower priority than user messages), etc.</p>
+<pre><code class="language-toml"># Type: integer
+# Values: 100 .. 60000
+# Default: 2000
+
+[servers.&lt;name&gt;]
+anti_flood = 2000
+</code></pre>
 <h2 id="who_poll_enabled"><a class="header" href="#who_poll_enabled"><code>who_poll_enabled</code></a></h2>
 <p>Whether or not to WHO polling is enabled.</p>
 <pre><code class="language-toml"># Type: boolean
@@ -2608,7 +2617,7 @@ on_connect = ["/msg NickServ IDENTIFY foo bar", "/delay 2", "/join registered-cl
 who_poll_enabled = true
 </code></pre>
 <h2 id="who_poll_interval"><a class="header" href="#who_poll_interval"><code>who_poll_interval</code></a></h2>
-<p>WHO poll interval (in seconds) for servers without away-notify.  Specifically, the time between individual WHO requests. Will be increased automatically if the server sends a rate-limiting message.</p>
+<p>WHO poll interval (in seconds) for servers without away-notify.  Specifically, the time between individual WHO requests. Will be increased automatically if the server sends a rate-limiting message.  When the server does not support SAFERATE (and anti-flood protections are enabled) then <code>who_poll_interval</code> will be increased to than twice <code>anti_flood</code> if it is not already.</p>
 <pre><code class="language-toml"># Type: integer
 # Values: 1 .. 3600
 # Default: 2
