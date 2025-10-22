@@ -1528,6 +1528,24 @@ show_access_level = true
 [buffer.timestamp]
 format = "%R"
 </code></pre>
+<h3 id="context_menu_format"><a class="header" href="#context_menu_format"><code>context_menu_format</code></a></h3>
+<p>Controls the format of shown in a timestamp's context menu. The expected format is <a href="https://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html">strftime</a>.</p>
+<pre><code class="language-toml"># Type: string
+# Values: any valid strftime string
+# Default: "%x"
+
+[buffer.timestamp]
+context_menu_format = "%x"
+</code></pre>
+<h3 id="copy_format"><a class="header" href="#copy_format"><code>copy_format</code></a></h3>
+<p>Controls the format used when copying the timestamp into the clipboard from its context menu. The expected format is <a href="https://pubs.opengroup.org/onlinepubs/007908799/xsh/strftime.html">strftime</a>.  If not set, then the timestamp is copied in the <a href="https://en.wikipedia.org/wiki/ISO_8601">date and time of day in UTC using extended format ISO 8601:2004(E) 4.3.2 with millisecond precision</a> as is utilized in IRCv3.</p>
+<pre><code class="language-toml"># Type: string
+# Values: any valid strftime string or not set
+# Default: not set
+
+[buffer.timestamp]
+copy_format = "%Y-%m-%d %H:%M:%S"
+</code></pre>
 <h3 id="brackets-2"><a class="header" href="#brackets-2"><code>brackets</code></a></h3>
 <p>Brackets around timestamps.</p>
 <pre><code class="language-toml"># Type: string
@@ -1556,6 +1574,15 @@ prompt_before_open = true
 
 [buffer]
 line_spacing = 4
+</code></pre>
+<h2 id="scroll_position_on_open"><a class="header" href="#scroll_position_on_open"><code>[scroll_position_on_open]</code></a></h2>
+<p>Scroll position of the buffer when it opens.</p>
+<pre><code class="language-toml"># Type: string
+# Values: "oldest-unread", "newest"
+# Default: "oldest-unread"
+
+[buffer]
+scroll_position_on_open = "newest"
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ctcp"><a class="header" href="#ctcp"><code>[ctcp]</code></a></h1>
 <p><a href="https://modern.ircdocs.horse/ctcp">Client-to-Client Protocol</a> response settings.</p>
@@ -2868,6 +2895,62 @@ icon_size = 6
 
 [sidebar.unread_indicator]
 highlight_icon_size = 8
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="platform_specific"><a class="header" href="#platform_specific"><code>[platform_specific]</code></a></h1>
+<p>Platform specific settings for Halloy.</p>
+<h2 id="macos-1"><a class="header" href="#macos-1"><code>macos</code></a></h2>
+<p>macOS specific settings</p>
+<h3 id="content_padding"><a class="header" href="#content_padding"><code>content_padding</code></a></h3>
+<p>Controls if the content (panes) are rendered inside the the titlebar content view, or padded just below it.</p>
+<pre><code class="language-toml"># Type: string
+# Values: "embedded-content", "padded-content"
+# Default: "embedded-content"
+
+[platform_specific]
+macos.content_padding = "embedded-content"
+</code></pre>
+<h3 id="sidebar_padding"><a class="header" href="#sidebar_padding"><code>sidebar_padding</code></a></h3>
+<p>Controls if the sidebar is rendered inside the the titlebar content view, or padded just below it.</p>
+<pre><code class="language-toml"># Type: string
+# Values: "embedded-content", "padded-content"
+# Default: "padded-content"
+
+[platform_specific]
+macos.sidebar_padding = "embedded-content"
+</code></pre>
+<h3 id="decorations"><a class="header" href="#decorations"><code>decorations</code></a></h3>
+<p>Whether the window should have a border, traffic light, a title bar, etc. or not.
+A restart is required for this change to take effect.</p>
+<pre><code class="language-toml"># Type: boolean
+# Values: true, false
+# Default: true
+
+[platform_specific]
+macos.decorations = false
+</code></pre>
+<h2 id="linux-1"><a class="header" href="#linux-1"><code>linux</code></a></h2>
+<p>Linux specific settings</p>
+<h3 id="decorations-1"><a class="header" href="#decorations-1"><code>decorations</code></a></h3>
+<p>Whether the window should have a border, a title bar, etc. or not.
+A restart is required for this change to take effect.</p>
+<pre><code class="language-toml"># Type: boolean
+# Values: true, false
+# Default: true
+
+[platform_specific]
+linux.decorations = false
+</code></pre>
+<h2 id="windows-1"><a class="header" href="#windows-1"><code>windows</code></a></h2>
+<p>Windows specific settings</p>
+<h3 id="decorations-2"><a class="header" href="#decorations-2"><code>decorations</code></a></h3>
+<p>Whether the window should have a border, a title bar, etc. or not.
+A restart is required for this change to take effect.</p>
+<pre><code class="language-toml"># Type: boolean
+# Values: true, false
+# Default: true
+
+[platform_specific]
+windows.decorations = false
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="themes"><a class="header" href="#themes">Themes</a></h1>
 <h2 id="example-5"><a class="header" href="#example-5">Example</a></h2>
