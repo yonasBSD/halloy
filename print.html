@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-559471ea.js";
+            window.path_to_searchindex_js = "searchindex-805d4fce.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-fe913ceb.js"></script>
@@ -824,6 +824,7 @@ channels = ["#halloy"]
 <pre><code class="language-toml">[buffer.text_input]
 auto_format = "disabled" | "markdown" | "all"
 </code></pre>
+<p>When <code>auto_format</code> is enabled, it can be disabled for an individual message by using the <code>/plain</code> command.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="url-schemes"><a class="header" href="#url-schemes">URL Schemes</a></h1>
 <p>Halloy is able to recognize different URL schemes.</p>
@@ -1916,16 +1917,18 @@ username_format = "full"
 <tr><th><strong>Event Type</strong></th><th><strong>Symbol</strong></th></tr>
 </thead>
 <tbody>
+<tr><td><code>change-host</code></td><td><code>→</code></td></tr>
 <tr><td><code>change-nick</code></td><td><code>→</code></td></tr>
 <tr><td><code>join</code></td><td><code>+</code></td></tr>
 <tr><td><code>part</code></td><td><code>-</code></td></tr>
 <tr><td><code>quit</code></td><td><code>-</code></td></tr>
+<tr><td><code>kick</code></td><td><code>!</code></td></tr>
 </tbody>
 </table>
 </div>
 <p>The color and font style of the symbols is taken from the theme setting for that event type.</p>
 <pre><code class="language-toml"># Type: array of strings
-# Values: ["change-nick", "join", "part", "quit"]
+# Values: ["change-host", "change-nick", "join", "kick", "part", "quit"]
 # Default: []
 
 [buffer.server_messages.condense]
@@ -2229,6 +2232,7 @@ The argument(s) for a command are shown in <a href="#tooltips">tooltips</a>, and
 <tr><td><code>nick</code></td><td></td><td>Change your nickname on the current server</td></tr>
 <tr><td><code>notice</code></td><td></td><td>Send a notice message to a target</td></tr>
 <tr><td><code>part</code></td><td><code>leave</code></td><td>Leave and close channel(s)/quer(ies) with an optional reason <sup class="footnote-reference" id="fr-4-1"><a href="#footnote-4">7</a></sup></td></tr>
+<tr><td><code>plain</code></td><td><code>p</code></td><td>Send text with markdown and colors disabled</td></tr>
 <tr><td><code>quit</code></td><td></td><td>Disconnect from the server with an optional reason</td></tr>
 <tr><td><code>raw</code></td><td></td><td>Send data to the server without modifying it</td></tr>
 <tr><td><code>setname</code></td><td></td><td>Change your realname<sup class="footnote-reference" id="fr-5-6"><a href="#footnote-5">1</a></sup></td></tr>
