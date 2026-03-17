@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3f142ae8.js";
+            window.path_to_searchindex_js = "searchindex-e6878c13.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a4c0301a.js"></script>
+        <script src="toc-25df0173.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1523,6 +1523,7 @@ infinite_scroll = true
 <li><a href="#sysinfo">Sysinfo</a></li>
 <li><a href="#quit">Quit</a></li>
 <li><a href="#part">Part</a></li>
+<li><a href="#aliases">Aliases</a></li>
 </ul>
 </li>
 </ul>
@@ -1542,6 +1543,40 @@ show_description = true
 <p>Configure <code>QUIT</code> command</p>
 <h2 id="part"><a class="header" href="#part"><a href="#part-1">Part</a></a></h2>
 <p>Configure <code>PART</code> command</p>
+<h2 id="aliases"><a class="header" href="#aliases"><a href="#aliases-1">Aliases</a></a></h2>
+<p>Define custom slash command aliases</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="aliases-1"><a class="header" href="#aliases-1">Aliases</a></h1>
+<p>Define custom slash command aliases.</p>
+<pre><code class="language-toml"># Type: map
+# Values: map with string key/value pairs
+# Default: {}
+
+[buffer.commands.aliases]
+op = "/mode #halloy +ooo $1 $2 $3"
+halloy = "/me says halloy to $1!"
+topic = "/topic #halloy $1-"
+deopme = "/mode -o $nick"
+</code></pre>
+<p>Use <code>$1</code> through <code>$9</code> to insert positional arguments.  A hyphen after
+the argument number (e.g. <code>$1-</code>) means that all following arguments will
+also be included in the argument; for example, <code>/topic our new topic</code>
+for the alias defined as <code>topic = "/topic #halloy $1-"</code> will expand to
+<code>/topic #halloy our new topic</code>.</p>
+<p>You can also use context-aware placeholders:</p>
+<ul>
+<li><code>$nick</code> inserts your current nickname.</li>
+<li><code>$channel</code> inserts the active channel name.</li>
+<li><code>$server</code> inserts the active server name.</li>
+</ul>
+<p>Aliases must be specified in reference to existing slash commands, so to
+send a regular message the <code>/msg</code> command (or equivalent, such as
+<code>/plain</code>/<code>/format</code> command) should be used.  For example, <code>welcome = "/msg $channel welcome to IRC $1, enjoy your stay!"</code>.</p>
+<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
+<ul>
+<li>Aliases take precedence over built-in commands with the same name.</li>
+<li>Alias expansion happens once; aliases do not expand other aliases.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="sysinfo-1"><a class="header" href="#sysinfo-1">Sysinfo</a></h1>
 <p>Configure which system information components to display when using the <code>/sysinfo</code> command</p>
@@ -2610,6 +2645,8 @@ check_for_update_on_launch = true
 <h2 id="types-2"><a class="header" href="#types-2">Types</a></h2>
 <p>Halloy will first try to run below commands, and lastly send it directly to the server.
 The argument(s) for a command are shown in <a href="#tooltips">tooltips</a>, and those marked with a <code>*</code> will show an additional tooltip with argument-specific information on mouseover.</p>
+<p>You can configure custom command aliases in <a href="#aliases-1"><code>buffer.commands.aliases</code></a>.
+Aliases are resolved before built-in commands and take precedence when they use the same name.</p>
 <div class="table-wrapper">
 <table>
 <thead>
